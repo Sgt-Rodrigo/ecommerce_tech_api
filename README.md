@@ -1,1 +1,1 @@
-Testing
+Server information for examiner
