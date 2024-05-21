@@ -33,8 +33,16 @@ export class ProductsController {
   }
 
   @Put(':id')
-  updatePut(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productsService.update(+id, updateProductDto);
+  async updatePut(@Param('id') id: string, 
+                  @Body() updateProductDto: UpdateProductDto,
+                  @Res() res:Response
+                ) {
+  try {
+      const response = await this.productsService.updatePut(id, updateProductDto);
+      return res.status(200).json(response.id)
+  } catch (error) {
+    throw error
+  }
   }
 
   // @Patch(':id')

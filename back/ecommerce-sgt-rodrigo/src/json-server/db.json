@@ -37,7 +37,7 @@
       "id": "1",
       "name": "Smartphone",
       "description": "A latest model smartphone",
-      "price": 699.99,
+      "price": 99.99,
       "stock": 50,
       "categoryID": 1,
       "imageURL": "http://example.com/smartphone.jpg"
@@ -53,11 +53,11 @@
     },
     {
       "id": "3",
-      "name": "Novel",
+      "name": "Keyboard",
       "description": "A gripping mystery novel",
-      "price": 14.99,
+      "price": 30.99,
       "stock": 100,
-      "categoryID": 2,
+      "categoryID": 5,
       "imageURL": "http://example.com/novel.jpg"
     },
     {

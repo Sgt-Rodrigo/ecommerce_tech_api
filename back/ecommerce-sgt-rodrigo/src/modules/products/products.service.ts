@@ -13,6 +13,7 @@ export class ProductsService  {
       const response = await this.productRepo.create(createProductDto);
       return response
   } catch (error) {
+    //w re-throw
     throw error
   }
   }
@@ -25,8 +26,13 @@ export class ProductsService  {
     return `This action returns a #${id} product`;
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async updatePut(id: string, updateProductDto: UpdateProductDto) {
+   try {
+    const response = await this.productRepo.updatePut(id, updateProductDto);
+    return response
+   } catch (error) {
+    throw error
+   }
   }
 
   remove(id: number) {
