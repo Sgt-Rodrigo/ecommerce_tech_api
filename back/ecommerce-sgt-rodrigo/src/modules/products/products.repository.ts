@@ -44,9 +44,9 @@ export class ProductsRepositoryService {
         }
     }
 
-    async findAll(){
+    async findAll(page:number = 1, limit:number = 5 ){
         try {
-            const response = await axios.get(this.jsonServerURL)
+            const response = await axios.get(`${this.jsonServerURL}?_page=${page}&_limit=${limit}`)
             return response.data
         } catch (error) {
             throw new HttpException('Error fetching all products', HttpStatus.INTERNAL_SERVER_ERROR)

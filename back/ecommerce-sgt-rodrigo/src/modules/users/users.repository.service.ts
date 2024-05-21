@@ -8,9 +8,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersRepo{
     private readonly jsonServerUrl = 'http://localhost:8000/users';
 
-    async getAllUsers(){
+    async getAllUsers(page:number = 1, limit:number = 5){
         try {
-            const response = await axios.get(this.jsonServerUrl);
+            const response = await axios.get(`${this.jsonServerUrl}?_page=${page}&_limit=${limit}`);
             const users = response.data.map(({password, ...user}:User) => user)
             return users
         } catch (error) {
