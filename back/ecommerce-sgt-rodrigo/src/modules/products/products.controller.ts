@@ -3,6 +3,7 @@ import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Response } from 'express';
+import { ID } from './entities/product.entity';
 
 @Controller('products')
 export class ProductsController {
@@ -23,13 +24,29 @@ export class ProductsController {
   }
 
   @Get()
-  findAll() {
-    return this.productsService.findAll();
+  async findAll(@Res() res: Response) {
+  try {
+     const response = await this.productsService.findAll();
+     return res.status(200).json({
+      message:'Products fetched succesfully', 
+      allProducts: response
+     })
+  } catch (error) {
+    
+  }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productsService.findOne(+id);
+  async findOne(@Param('id') id: ID, @Res() res: Response) {
+    try {
+      const response = await this.productsService.findOne(id);
+      return res.status(200).json({
+        message:'Product fetched succesfully',
+        product: response
+      })
+    } catch (error) {
+      throw error
+    }
   }
 
   @Put(':id')
@@ -51,7 +68,15 @@ export class ProductsController {
   // }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productsService.remove(+id);
+  async remove(@Param('id') id: ID, @Res() res: Response) {
+    try {
+      const response = await this.productsService.remove(id);
+      return res.status(200).json({
+        message: 'Product deleted successfully',
+        id: response.id
+      })
+    } catch (error) {
+      throw error
+    }
   }
 }

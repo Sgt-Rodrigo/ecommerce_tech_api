@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductsRepositoryService } from './products.repository';
+import { ID } from './entities/product.entity';
 
 @Injectable()
 export class ProductsService  {
@@ -18,12 +19,22 @@ export class ProductsService  {
   }
   }
 
-  findAll() {
-    return `This action returns all products`;
+  async findAll() {
+   try {
+    const response = await this.productRepo.findAll();
+    return response
+   } catch (error) {
+    throw error
+   }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(id: ID) {
+    try {
+      const response = await this.productRepo.findOne(id);
+      return response
+    } catch (error) {
+      throw error
+    }
   }
 
   async updatePut(id: string, updateProductDto: UpdateProductDto) {
@@ -35,7 +46,12 @@ export class ProductsService  {
    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id:ID) {
+   try {
+    const response = await this.productRepo.remove(id);
+    return response
+   } catch (error) {
+    throw error
+   }
   }
 }

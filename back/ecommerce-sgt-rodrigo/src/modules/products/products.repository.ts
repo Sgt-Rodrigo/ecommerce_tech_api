@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import axios from 'axios';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { ID } from './entities/product.entity';
 
 @Injectable()
 export class ProductsRepositoryService {
@@ -22,6 +23,33 @@ export class ProductsRepositoryService {
             return response.data
         } catch (error) {
             throw new HttpException('Error updating product', HttpStatus.INTERNAL_SERVER_ERROR)
+        }
+    }
+
+    async remove(id:ID){
+        try {
+            const response = await axios.delete(`${this.jsonServerURL}/${id}`);
+            return response.data
+        } catch (error) {
+            throw new HttpException('Error removing product', HttpStatus.INTERNAL_SERVER_ERROR)
+        }
+    }
+
+    async findOne(id:ID){
+        try {
+            const response = await axios.get(`${this.jsonServerURL}/${id}`);
+            return response.data
+        } catch (error) {
+            throw new HttpException('Error fetching product', HttpStatus.INTERNAL_SERVER_ERROR)
+        }
+    }
+
+    async findAll(){
+        try {
+            const response = await axios.get(this.jsonServerURL)
+            return response.data
+        } catch (error) {
+            throw new HttpException('Error fetching all products', HttpStatus.INTERNAL_SERVER_ERROR)
         }
     }
 }

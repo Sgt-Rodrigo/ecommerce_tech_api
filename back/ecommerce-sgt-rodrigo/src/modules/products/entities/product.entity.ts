@@ -8,3 +8,5 @@ export class Product {
     imageURL: string;
 
 }
+
+export type ID = Pick<Product, 'id'>

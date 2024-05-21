@@ -77,24 +77,6 @@
       "stock": 30,
       "categoryID": 4,
       "imageURL": "http://example.com/tablet.jpg"
-    },
-    {
-      "id": "9ae4",
-      "name": "Salame",
-      "description": "A latest model smartphone",
-      "price": 2000,
-      "stock": 30,
-      "categoryID": 4,
-      "imageURL": "http://example.com/tablet.jpg"
-    },
-    {
-      "id": "4ac4",
-      "name": "Queso",
-      "description": "A latest model smartphone",
-      "price": 2000,
-      "stock": 30,
-      "categoryID": 4,
-      "imageURL": "http://example.com/tablet.jpg"
     }
   ],
   "orders": [
