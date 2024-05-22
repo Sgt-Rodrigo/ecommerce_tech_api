@@ -8,17 +8,22 @@ import {
   Delete,
   Put,
   Res,
+  UseGuards,
+  SetMetadata,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Response } from 'express';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('users')
+@UseGuards(AuthGuard) 
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @SetMetadata('isPublic', true)
  async  create(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
    try {
     const response = await this.usersService.create(createUserDto)

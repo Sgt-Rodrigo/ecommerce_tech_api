@@ -10,9 +10,9 @@
       "role": "Customer"
     },
     {
-      "name": "Jane Smith",
+      "name": "Emma Smith",
       "email": "Emma.smith@example.com",
-      "password": "password123",
+      "password": "password321",
       "address": "456 Elm St, Othertown, USA",
       "phone": "098-765-4321",
       "id": "2"
@@ -55,7 +55,7 @@
       "id": "3",
       "name": "Keyboard",
       "description": "A gripping mystery novel",
-      "price": 30.99,
+      "price": 25.99,
       "stock": 100,
       "categoryID": 5,
       "imageURL": "http://example.com/novel.jpg"
@@ -70,8 +70,8 @@
       "imageURL": "http://example.com/headphone.jpg"
     },
     {
-      "id": "92c6",
-      "name": "Tablet",
+      "id": "d87b",
+      "name": "Mate",
       "description": "A latest model smartphone",
       "price": 2000,
       "stock": 30,

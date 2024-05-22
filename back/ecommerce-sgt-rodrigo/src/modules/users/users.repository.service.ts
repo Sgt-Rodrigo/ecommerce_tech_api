@@ -10,13 +10,26 @@ export class UsersRepo{
 
     async getAllUsers(page:number = 1, limit:number = 5){
         try {
-            const response = await axios.get(`${this.jsonServerUrl}?_page=${page}&_limit=${limit}`);
+            const response = await axios.get(
+                `${this.jsonServerUrl}`);
             const users = response.data.map(({password, ...user}:User) => user)
             return users
         } catch (error) {
             throw new HttpException('Error fetching all users', HttpStatus.INTERNAL_SERVER_ERROR)
         }
     }
+
+    //w getAllUsers with pagination
+    // async getAllUsers(page:number = 1, limit:number = 5){
+    //     try {
+    //         const response = await axios.get(
+    //             `${this.jsonServerUrl}?_page=${page}&_limit=${limit}`);
+    //         const users = response.data.map(({password, ...user}:User) => user)
+    //         return users
+    //     } catch (error) {
+    //         throw new HttpException('Error fetching all users', HttpStatus.INTERNAL_SERVER_ERROR)
+    //     }
+    // }
 
     async getUserByID(id:string){
        try {
