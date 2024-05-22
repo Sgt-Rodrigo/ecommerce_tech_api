@@ -2,6 +2,7 @@ import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nes
 import { UsersRepo } from '../users/users.repository.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { User } from '../users/entities/user.entity';
+import axios from 'axios';
 
 @Injectable()
 export class AuthRepositoryService {
@@ -9,14 +10,15 @@ export class AuthRepositoryService {
 
     async login(loginAuthDto:LoginAuthDto){
        //w validation is done through class-validator in dto file
-        //! is pagination only for products then?, cause here I need all users.
+        //! is pagination only for products then?, cause here I need to get all users, not just a page.
+        //! And what about the password, getAllUsers does NOT return the password
        try {
-        const response = await this.usersRepo.getAllUsers();
-        const data = response.data;
-        console.log(data)
+        const response = await this.usersRepo.getAllUsersWithPassword()
+        
+        console.log(response)
 
         //w find user
-        const user = data.find((user:User) => user.email === loginAuthDto.email);
+        const user = response.find((user:User) => user.email === loginAuthDto.email);
 
         if(!user || user.password !== loginAuthDto.password){
             throw new BadRequestException('Incorrect email or password');
@@ -25,7 +27,8 @@ export class AuthRepositoryService {
         return 'user logged in'
 
        } catch (error) {
-        throw new HttpException('Login attempt failed, our bad! Try again', HttpStatus.INTERNAL_SERVER_ERROR )
+        throw error
+        
        }
     }
 }

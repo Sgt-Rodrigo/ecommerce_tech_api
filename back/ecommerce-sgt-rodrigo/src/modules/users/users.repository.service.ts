@@ -31,6 +31,16 @@ export class UsersRepo{
     //     }
     // }
 
+        async getAllUsersWithPassword(){
+            try {
+                const response = await axios.get(`${this.jsonServerUrl}`);
+                return response.data
+            } catch (error) {
+                throw new HttpException('Error fetching all users', HttpStatus.INTERNAL_SERVER_ERROR)
+            }
+        }
+
+
     async getUserByID(id:string){
        try {
          const response = await axios.get(`${this.jsonServerUrl}/${id}`)
