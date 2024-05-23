@@ -26,6 +26,17 @@ export class ProductsController {
    }
   }
 
+  @Post('seeder')
+  @SetMetadata('isPublic', true)
+  async seedProducts() {
+   try {
+     const response = await this.productsService.addProducts();
+     return response
+   } catch (error) {
+    throw error
+   }
+  }
+
   @Get()
   async findAll(@Res() res: Response) {
   try {

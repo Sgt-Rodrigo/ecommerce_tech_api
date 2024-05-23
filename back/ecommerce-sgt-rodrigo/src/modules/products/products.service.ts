@@ -3,11 +3,24 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductsRepositoryService } from './products.repository';
 import { ID } from './entities/product.entity';
+import { ProductsDBService } from './productsDB.service';
 
 @Injectable()
 export class ProductsService  {
 
-  constructor( private readonly productRepo:ProductsRepositoryService) {}
+  constructor( private readonly productRepo:ProductsRepositoryService,
+               private readonly productsDBService: ProductsDBService
+  ) {}
+
+  //w preloads products
+  async addProducts(){
+   try {
+     const response = await this.productsDBService.addProducts();
+     return response
+   } catch (error) {
+    throw error
+   }
+  }
 
   async create(createProductDto: CreateProductDto) {
   try {
