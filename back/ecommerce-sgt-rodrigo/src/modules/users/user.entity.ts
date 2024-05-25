@@ -4,7 +4,9 @@ import { v4 as uuidv4 } from 'uuid';
 uuidv4();
 
  
-  @Entity()
+  @Entity({
+    name: 'users'
+  })
   export class User {
     @PrimaryGeneratedColumn('uuid')
     id: string = uuidv4();
@@ -24,7 +26,7 @@ uuidv4();
     @Column({ type: 'varchar', length: 50 })
     country: string;
   
-    @Column('text')
+    @Column({ default: 'Unknown Address' })
     address: string;
   
     @Column({ type: 'varchar', length: 50 })

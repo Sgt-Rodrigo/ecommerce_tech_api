@@ -6,6 +6,7 @@ import {
     OneToOne,
     JoinColumn
   } from 'typeorm';
+  import { Exclude } from 'class-transformer';
   
 import { OrderDetail } from './order_detail.entity';
 import { v4 as uuidv4 } from 'uuid';
@@ -25,9 +26,13 @@ uuidv4();
   
     @Column()
     date: Date;
-  
+    
+    @Exclude()
     @OneToOne(() => OrderDetail)
     @JoinColumn()
     orderDetail: OrderDetail;
+
+    @Column('decimal', { precision: 10, scale: 2 })
+    total: number;
   }
   

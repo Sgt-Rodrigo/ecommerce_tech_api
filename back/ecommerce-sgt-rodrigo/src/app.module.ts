@@ -8,9 +8,10 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import typeOrmConfig from './config/typeorm';
 import { CategoriesModule } from './modules/categories/categories.module';
+import { OrderModule } from './modules/order/order.module';
 
 @Module({
-  imports: [UsersModule, ProductsModule, AuthModule, CategoriesModule,
+  imports: [UsersModule, ProductsModule, AuthModule, CategoriesModule, OrderModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load:[typeOrmConfig],

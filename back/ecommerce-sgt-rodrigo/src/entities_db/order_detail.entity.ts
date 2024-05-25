@@ -1,6 +1,7 @@
 import { Column, Entity, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Order } from "./order.entity";
 import { Product } from "./product.entity";
+import { Exclude } from 'class-transformer';
 import { v4 as uuidv4 } from 'uuid';
 uuidv4();
 
@@ -10,8 +11,9 @@ export class OrderDetail {
   id: string = uuidv4();
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: false })
-  price: number;
+  price: number = 0;
 
+  @Exclude()
   @OneToOne(() => Order, order => order.orderDetail)
   order: Order;
 
