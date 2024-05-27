@@ -46,7 +46,7 @@ export class ProductsController {
       allProducts: response
      })
   } catch (error) {
-    
+    throw error
   }
   }
 
