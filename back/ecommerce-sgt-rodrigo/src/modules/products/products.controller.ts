@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Res, UseGuards, SetMetadata } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Res, UseGuards, SetMetadata, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -38,20 +38,24 @@ export class ProductsController {
   }
 
   @Get()
-  async findAll(@Res() res: Response) {
-  try {
-     const response = await this.productsService.findAll();
-     return res.status(200).json({
-      message:'Products fetched succesfully', 
-      allProducts: response
-     })
-  } catch (error) {
-    throw error
-  }
-  }
+    async findAll(
+        @Query('page') page: number, // Extract the 'page' query parameter
+        @Query('limit') limit: number, // Extract the 'limit' query parameter
+        @Res() res: Response,
+    ) {
+        try {
+            const response = await this.productsService.findAll(page, limit);
+            return res.status(200).json({
+                message: 'Products fetched successfully',
+                allProducts: response,
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
 
   @Get(':id')
-  async findOne(@Param('id') id: ID, @Res() res: Response) {
+  async findOne(@Param('id', ParseUUIDPipe) id: string, @Res() res: Response) {
     try {
       const response = await this.productsService.findOne(id);
       return res.status(200).json({
@@ -64,7 +68,7 @@ export class ProductsController {
   }
 
   @Put(':id')
-  async updatePut(@Param('id') id: string, 
+  async updatePut(@Param('id', ParseUUIDPipe) id: string, 
                   @Body() updateProductDto: UpdateProductDto,
                   @Res() res:Response
                 ) {
@@ -82,12 +86,12 @@ export class ProductsController {
   // }
 
   @Delete(':id')
-  async remove(@Param('id') id: ID, @Res() res: Response) {
+  async remove(@Param('id') id: string, @Res() res: Response) {
     try {
       const response = await this.productsService.remove(id);
       return res.status(200).json({
         message: 'Product deleted successfully',
-        id: response.id
+        id: response
       })
     } catch (error) {
       throw error

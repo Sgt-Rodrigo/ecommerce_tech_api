@@ -7,4 +7,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     'password': string;
     'address': string;
     'phone': string;
+    'country': string;
+    'city': string;
+    'role': 'customer' | 'admin'
 }

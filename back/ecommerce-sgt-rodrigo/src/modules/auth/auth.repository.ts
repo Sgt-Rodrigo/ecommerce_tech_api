@@ -1,5 +1,5 @@
 import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { UsersRepo } from '../users/users.repository.service';
+import { UsersRepo } from '../users/usersDB.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { User } from '../users/entities/user.entity';
 import axios from 'axios';

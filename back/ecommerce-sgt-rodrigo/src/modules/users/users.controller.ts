@@ -10,6 +10,7 @@ import {
   Res,
   UseGuards,
   SetMetadata,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -24,7 +25,7 @@ export class UsersController {
 
   @Post()
   @SetMetadata('isPublic', true)
- async  create(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
+ async create(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
    try {
     const response = await this.usersService.create(createUserDto)
 
@@ -47,10 +48,8 @@ export class UsersController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string, @Res() res: Response) {
+  async findOne(@Param('id', ParseUUIDPipe) id: string, @Res() res: Response) {
    try {
-    //! Remember you are passing id as a string for json server
-    //! And the entity User was set as number | string
      const response = await this.usersService.findOne(id);
      return res.status(200).json(response)
    } catch (error) {
@@ -59,12 +58,15 @@ export class UsersController {
   }
 
   @Put(':id')
-  async updatePut(@Param('id') id: string, 
+  async updatePut(@Param('id', ParseUUIDPipe) id: string, 
             @Body() updateUserDto: UpdateUserDto, 
             @Res() res: Response) {
     try {
       const response = await this.usersService.updatePut(id, updateUserDto);
-      return res.status(200).json(`user with id ${response.id} modified`)
+      return res.status(200).json({
+        message: 'user modified',
+        user: response
+      })
     } catch (error) {
       throw error
     }
@@ -77,11 +79,12 @@ export class UsersController {
   // }
 
   @Delete(':id')
-  async remove(@Param('id') id: string, @Res() res: Response) {
+  async remove(@Param('id', ParseUUIDPipe) id: string, @Res() res: Response) {
    try {
     const response = await this.usersService.remove(id);
     return res.status(200).json({
-      message:`User with id ${response.id} Removed Succesfully`
+      message:`User Removed Succesfully`,
+      user: response
     })
    } catch (error) {
     throw error

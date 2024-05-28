@@ -5,5 +5,7 @@ export class User {
     'password': string;
     'address': string;
     'phone': string;
+    'country': string;
+    'city': string;
     'role': 'customer' | 'admin'
 }

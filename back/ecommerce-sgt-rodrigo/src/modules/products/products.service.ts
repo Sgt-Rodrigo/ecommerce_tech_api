@@ -24,7 +24,7 @@ export class ProductsService  {
 
   async create(createProductDto: CreateProductDto) {
   try {
-      const response = await this.productRepo.create(createProductDto);
+      const response = await this.productsDBService.create(createProductDto);
       return response
   } catch (error) {
     //w re-throw
@@ -32,18 +32,18 @@ export class ProductsService  {
   }
   }
 
-  async findAll() {
+  async findAll(page:number, limit: number) {
    try {
-    const response = await this.productRepo.findAll();
+    const response = await this.productsDBService.getAllProducts(page, limit);
     return response
    } catch (error) {
     throw error
    }
   }
 
-  async findOne(id: ID) {
+  async findOne(id: string) {
     try {
-      const response = await this.productRepo.findOne(id);
+      const response = await this.productsDBService.findOne(id);
       return response
     } catch (error) {
       throw error
@@ -52,16 +52,16 @@ export class ProductsService  {
 
   async updatePut(id: string, updateProductDto: UpdateProductDto) {
    try {
-    const response = await this.productRepo.updatePut(id, updateProductDto);
+    const response = await this.productsDBService.updatePut(id, updateProductDto);
     return response
    } catch (error) {
     throw error
    }
   }
 
-  async remove(id:ID) {
+  async remove(id:string) {
    try {
-    const response = await this.productRepo.remove(id);
+    const response = await this.productsDBService.remove(id);
     return response
    } catch (error) {
     throw error
