@@ -1,15 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Res, UseGuards, SetMetadata, ParseUUIDPipe, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Res, UseGuards, SetMetadata, ParseUUIDPipe, Query, UseInterceptors, UploadedFile, InternalServerErrorException, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Response } from 'express';
 import { ID } from './entities/product.entity';
 import { AuthGuard } from '../auth/auth.guard';
+import { CloudinaryService } from 'src/cloudinary.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ProductsDBService } from './productsDB.service';
 
 @Controller('products')
 @UseGuards(AuthGuard)
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(
+    private readonly productsService: ProductsService,
+    private readonly productsDBService: ProductsDBService,
+    private readonly cloudinaryService: CloudinaryService
+  ) {}
 
   @Post()
   @SetMetadata('isPublic', true)
@@ -35,6 +42,42 @@ export class ProductsController {
    } catch (error) {
     throw error
    }
+  }
+
+  //w here I m using the repo directly (delete all intermediate useless services)
+  //w image uploader
+  @Post('files/uploadImage/:id')
+  @SetMetadata('isPublic', true)
+  @UseInterceptors(FileInterceptor('image'))
+  async uploadImage(@UploadedFile(
+      new ParseFilePipe({
+        validators:[
+          new MaxFileSizeValidator({
+            maxSize:200000,
+            message:'File must be under 200kb'
+          }),
+          new FileTypeValidator({
+            fileType: /(jpg|jpeg|png|webp)$/
+           })
+        ]
+      })
+  ) file: Express.Multer.File, @Param('id') productId: string) {
+    try {
+      // Upload the image to Cloudinary
+      const uploadResult = await this.cloudinaryService.uploadImage(file);
+
+      // Extract the secure URL from the upload result
+      const imageUrl = uploadResult.secure_url;
+
+      // Update the product image URL
+      await this.productsDBService.updateImageUrl(productId, imageUrl);
+
+      return { message: 'Image uploaded and product image URL updated successfully' };
+    } catch (error) {
+      // Handle any errors (e.g., failed upload or database update)
+      console.error('Error uploading image:', error);
+      throw new InternalServerErrorException('Error uploading image');
+    }
   }
 
   @Get()

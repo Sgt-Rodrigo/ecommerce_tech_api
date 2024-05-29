@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from 'src/entities_db/product.entity';
@@ -121,6 +121,17 @@ async remove(id:string) {
       throw new HttpException('Error removing product', HttpStatus.INTERNAL_SERVER_ERROR)
     }
  }
+}
+
+
+//w saves image url
+async updateImageUrl(id: string, imageUrl: string): Promise<void> {
+  const product = await this.findOne(id);
+  if (!product) {
+    throw new InternalServerErrorException('Product not found');
+  }
+  product.imgUrl = imageUrl;
+  await this.productsRepository.save(product);
 }
 
 
