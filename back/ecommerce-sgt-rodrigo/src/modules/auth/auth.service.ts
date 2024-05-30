@@ -28,6 +28,7 @@ import { Role } from 'src/roles/roles.enum';
 
         //w token jwt to persist connection for 1h
         //w read the docs for more options mate
+        //! bear in mind all users are not admins by default, you must change it directly from the database
         const userPayload = {
           sub:dbUser.id,
           id: dbUser.id,

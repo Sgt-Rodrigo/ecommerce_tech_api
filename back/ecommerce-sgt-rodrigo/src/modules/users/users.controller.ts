@@ -11,11 +11,12 @@ import {
   UseGuards,
   SetMetadata,
   ParseUUIDPipe,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { AuthGuard } from '../auth/auth.guard';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/roles/roles.enum';
@@ -42,10 +43,16 @@ export class UsersController {
 //   }
 
   @Get()
- async findAll(@Res() res: Response) {
+  @SetMetadata('isPublic', true)
+ async findAll(@Req() req: Request, @Res() res: Response) {
     try {
       const response = await this.usersService.findAll();
-      return res.status(200).json(response)
+
+      return res.status(200).send(response)
+      // return res.status(200).json({
+      //   users: response,
+      //   auth0: req.oidc.user
+      // })
     } catch (error) {
       throw error
     }
