@@ -16,8 +16,15 @@
 
     async login(loginAuthDto:LoginAuthDto){
       try {
-        const response = await this.authRepo.login(loginAuthDto);
-        return response
+        const dbUser = await this.usersService.findUserByEmail(loginAuthDto.email);
+        if(!dbUser) throw new BadRequestException('User not Found');
+
+        //w validates password/hash
+        const isValidPassword = await bcrypt.compare(loginAuthDto.password, dbUser.password);
+        if(!isValidPassword) throw new BadRequestException('Invalid Password');
+        
+
+        return {success: 'User Logged In Succesfully'}
       } catch (error) {
         throw error
       }
