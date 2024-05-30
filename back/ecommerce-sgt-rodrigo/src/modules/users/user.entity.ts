@@ -33,9 +33,12 @@ uuidv4();
     @Column({ type: 'varchar', length: 50 })
     city: string;
 
-    @IsString()
-    @Length(5, 20)
-    role: string;
+    @Column({default:false})
+    isAdmin:boolean
+
+    // @IsString()
+    // @Length(5, 20)
+    // role: string;
   
     @OneToMany(() => Order, order => order.user)
     orders: Order[];

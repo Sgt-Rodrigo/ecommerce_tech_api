@@ -17,6 +17,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Response } from 'express';
 import { AuthGuard } from '../auth/auth.guard';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/roles/roles.enum';
+import { RolesGuard } from 'src/guards/roles/roles.guard';
 
 @Controller('users')
 @UseGuards(AuthGuard) 
@@ -46,6 +49,13 @@ export class UsersController {
     } catch (error) {
       throw error
     }
+  }
+
+  @Get('admin')
+  @Roles(Role.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
+  getAdmin(){
+      return 'Protected Route: for admins only'
   }
 
   @Get(':id')

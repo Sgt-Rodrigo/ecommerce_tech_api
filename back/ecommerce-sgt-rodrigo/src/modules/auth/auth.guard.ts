@@ -2,6 +2,7 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Observable } from 'rxjs';
+import { Role } from 'src/roles/roles.enum';
 
 @Injectable() 
 export class AuthGuard implements CanActivate {
@@ -20,7 +21,7 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
-    //w checks authorization, gets the header 'Basic: <email>:<password>'
+    //w checks authorization, gets the header 
     const request = context.switchToHttp().getRequest();
 
     const token = request.headers['authorization']?.split(' ')[1] ?? '';
@@ -28,11 +29,15 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException('Bearer Token Not Found')
     }
 
+    //w if you modify this
     try {
       const secret = process.env.JWT_SECRET;
       const payload = await this.jwtService.verifyAsync(token, {secret});
       payload.iat = new Date(payload.iat * 1000);
       payload.exp = new Date(payload.exp * 1000);
+      //? already defined in service
+      // payload.roles = [Role.ADMIN]
+      request.user = payload;
       return true
     } catch (error) {
       throw new UnauthorizedException('Invalid Token')

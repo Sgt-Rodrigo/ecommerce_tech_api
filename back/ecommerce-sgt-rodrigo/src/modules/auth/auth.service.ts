@@ -6,6 +6,7 @@
   import { CreateUserDto } from '../users/dto/create-user.dto';
   import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import { Role } from 'src/roles/roles.enum';
   const bcrypt = require('bcrypt');
 
   @Injectable()
@@ -30,7 +31,9 @@ import { JwtService } from '@nestjs/jwt';
         const userPayload = {
           sub:dbUser.id,
           id: dbUser.id,
-          email: dbUser.email
+          email: dbUser.email,
+          //? isAdmin: dbUser.isAdmin (ideally you get the value from the db)
+          roles: [dbUser.isAdmin ? Role.ADMIN : Role.USER]  
         }
         
         //w this creates de token 
