@@ -9,6 +9,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import typeOrmConfig from './config/typeorm';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { OrderModule } from './modules/order/order.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [UsersModule, ProductsModule, AuthModule, CategoriesModule, OrderModule,
@@ -21,6 +22,11 @@ import { OrderModule } from './modules/order/order.module';
       useFactory: (configService: ConfigService): TypeOrmModuleOptions => {
         return configService.get<TypeOrmModuleOptions>('typeorm')!;
       },
+    }),
+    JwtModule.register({
+      global: true,
+      signOptions: {expiresIn:'1h'},
+      secret: process.env.JWT_SECRET
     })
   ],
   controllers: [AppController],

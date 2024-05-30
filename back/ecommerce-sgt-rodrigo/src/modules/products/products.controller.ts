@@ -3,7 +3,6 @@ import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Response } from 'express';
-import { ID } from './entities/product.entity';
 import { AuthGuard } from '../auth/auth.guard';
 import { CloudinaryService } from 'src/cloudinary.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -47,7 +46,6 @@ export class ProductsController {
   //w here I m using the repo directly (delete all intermediate useless services)
   //w image uploader
   @Post('files/uploadImage/:id')
-  @SetMetadata('isPublic', true)
   @UseInterceptors(FileInterceptor('image'))
   async uploadImage(@UploadedFile(
       new ParseFilePipe({

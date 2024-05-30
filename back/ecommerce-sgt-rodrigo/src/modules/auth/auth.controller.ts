@@ -18,7 +18,7 @@ export class AuthController {
   @SetMetadata('isPublic', true)
   async login(@Body() loginAuthDto: LoginAuthDto, @Res() res:Response) {
     try {
-      const response = await this.authService.login(loginAuthDto);
+      const response = await this.authService.signIn(loginAuthDto);
       return res.status(200).json(response)
     } catch (error) {
       throw error

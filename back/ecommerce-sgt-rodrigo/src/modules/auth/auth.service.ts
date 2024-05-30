@@ -5,26 +5,38 @@
   import { AuthRepositoryService } from './auth.repository';
   import { CreateUserDto } from '../users/dto/create-user.dto';
   import { UsersService } from '../users/users.service';
+import { JwtService } from '@nestjs/jwt';
   const bcrypt = require('bcrypt');
 
   @Injectable()
   export class AuthService {
 
     constructor(private readonly authRepo:AuthRepositoryService,
-                private readonly usersService:UsersService
+                private readonly usersService:UsersService,
+                private readonly jwtService:JwtService
     ) {}
 
-    async login(loginAuthDto:LoginAuthDto){
+    async signIn(loginAuthDto:LoginAuthDto){
       try {
         const dbUser = await this.usersService.findUserByEmail(loginAuthDto.email);
-        if(!dbUser) throw new BadRequestException('User not Found');
+        if(!dbUser) throw new BadRequestException('Invalid email or password');
 
         //w validates password/hash
         const isValidPassword = await bcrypt.compare(loginAuthDto.password, dbUser.password);
-        if(!isValidPassword) throw new BadRequestException('Invalid Password');
-        
+        if(!isValidPassword) throw new BadRequestException('Invalid email or password');
 
-        return {success: 'User Logged In Succesfully'}
+        //w token jwt to persist connection for 1h
+        //w read the docs for more options mate
+        const userPayload = {
+          sub:dbUser.id,
+          id: dbUser.id,
+          email: dbUser.email
+        }
+        
+        //w this creates de token 
+        const token = this.jwtService.sign(userPayload)
+
+        return {success: 'User Logged In Succesfully', token}
       } catch (error) {
         throw error
       }

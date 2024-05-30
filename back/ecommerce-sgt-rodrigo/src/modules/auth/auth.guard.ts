@@ -1,14 +1,17 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { JwtService } from '@nestjs/jwt';
 import { Observable } from 'rxjs';
 
 @Injectable() 
 export class AuthGuard implements CanActivate {
-  constructor(private reflector:Reflector) {}
+  constructor(private reflector:Reflector,
+              private readonly jwtService:JwtService
+  ) {}
 
-  canActivate(
+  async canActivate(
     context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  ):  Promise<boolean> {
 
     //w skips methods where authorization is not mandatory
     const isPublic = this.reflector.get<boolean>('isPublic', context.getHandler());
@@ -19,25 +22,20 @@ export class AuthGuard implements CanActivate {
 
     //w checks authorization, gets the header 'Basic: <email>:<password>'
     const request = context.switchToHttp().getRequest();
-    const authHeader = request.headers['authorization'];
-    console.log(authHeader);
 
-    if (!authHeader) {
-      throw new UnauthorizedException('Authorization header is missing');
+    const token = request.headers['authorization']?.split(' ')[1] ?? '';
+    if(!token) {
+      throw new UnauthorizedException('Bearer Token Not Found')
     }
 
-    const [type, ...credentials] = authHeader.split(':');
-
-    if (type !== 'Basic' || credentials.length === 0) {
-      throw new UnauthorizedException('Invalid Authorization header format. Expected: Basic: <email>:<password>');
-    } 
-
-    const [email, password] = credentials;
-
-    if (!email || !password) {
-      throw new UnauthorizedException('Email and password are required in Authorization header');
+    try {
+      const secret = process.env.JWT_SECRET;
+      const payload = await this.jwtService.verifyAsync(token, {secret});
+      payload.iat = new Date(payload.iat * 1000);
+      payload.exp = new Date(payload.exp * 1000);
+      return true
+    } catch (error) {
+      throw new UnauthorizedException('Invalid Token')
     }
-
-    return true;
   }
 }
