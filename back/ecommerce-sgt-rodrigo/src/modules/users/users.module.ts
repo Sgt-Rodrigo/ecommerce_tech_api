@@ -15,6 +15,7 @@ import { requiresAuth } from 'express-openid-connect';
 })
 export class UsersModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
+    //w auth0 is not required by the homework so this method and the NestModule interface can be removed from here and products.module. I ll leave it for now since its commented out.
     // consumer.apply(requiresAuth()).forRoutes('users');
   }
 }
