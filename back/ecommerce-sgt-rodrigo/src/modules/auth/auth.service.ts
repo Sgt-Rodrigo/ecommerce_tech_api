@@ -1,13 +1,18 @@
-  import { Injectable } from '@nestjs/common';
+  import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
   import { CreateAuthDto } from './dto/create-auth.dto';
   import { UpdateAuthDto } from './dto/update-auth.dto';
   import { LoginAuthDto } from './dto/login-auth.dto';
   import { AuthRepositoryService } from './auth.repository';
+  import { CreateUserDto } from '../users/dto/create-user.dto';
+  import { UsersService } from '../users/users.service';
+  const bcrypt = require('bcrypt');
 
   @Injectable()
   export class AuthService {
 
-    constructor(private readonly authRepo:AuthRepositoryService) {}
+    constructor(private readonly authRepo:AuthRepositoryService,
+                private readonly usersService:UsersService
+    ) {}
 
     async login(loginAuthDto:LoginAuthDto){
       try {
@@ -18,8 +23,32 @@
       }
     }
 
-    create(createAuthDto: CreateAuthDto) {
-      return 'This action adds a new auth';
+ 
+
+    async signUpUser(userData: CreateUserDto) {
+     try {
+       //w checks if user already exists
+       const dbUser = await this.usersService.findUserByEmail(userData.email); 
+       if(dbUser) throw new BadRequestException('User already exists');
+ 
+        //w extracts fields from DTO excluding passwordConfirmation
+       const { passwordConfirmation, ...userDto } = userData;
+ 
+         const hashedPassword = await bcrypt.hash(userData.password, 10);
+         if(!hashedPassword) throw new HttpException('Error hashing password', HttpStatus.SERVICE_UNAVAILABLE)
+           
+           const newUser = {
+             ...userDto,
+             password: hashedPassword
+           }
+           console.log(newUser);
+ 
+           const response = await this.usersService.saveUser(newUser);
+ 
+         return response
+     } catch (error) {
+       throw error
+     }   
     }
 
     findAll() {

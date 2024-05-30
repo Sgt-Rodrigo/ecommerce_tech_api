@@ -8,10 +8,15 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
 
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,15}$/, {
-    message: 'Password must meet the specified criteria',
-  })
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,150}$/, {
+              message: 'Password must meet the specified criteria',
+          })
   password: string;
+
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,150}$/, {
+            message: 'Password must meet the specified criteria',
+          })
+  passwordConfirmation: string;
 
   @IsString()
   @Length(3, 80)
@@ -30,3 +35,5 @@ export class CreateUserDto {
   city: string;
 
 }
+
+export type UserDtoNoPassConfirm = Omit<CreateUserDto, 'passwordConfirmation'>;

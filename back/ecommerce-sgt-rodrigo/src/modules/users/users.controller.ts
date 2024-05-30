@@ -23,19 +23,20 @@ import { AuthGuard } from '../auth/auth.guard';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  @SetMetadata('isPublic', true)
- async create(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
-   try {
-    const response = await this.usersService.create(createUserDto)
+  //w this endpoint is replaced by the auth one > auth/signup
+//   @Post()
+//   @SetMetadata('isPublic', true)
+//  async create(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
+//    try {
+//     const response = await this.usersService.create(createUserDto)
 
-      return res.status(201).json({
-        message: `user created with id: ${response.id}`
-      })     
-   } catch (error) {
-    throw error
-   }
-  }
+//       return res.status(201).json({
+//         message: `user created with id: ${response.id}`
+//       })     
+//    } catch (error) {
+//     throw error
+//    }
+//   }
 
   @Get()
  async findAll(@Res() res: Response) {

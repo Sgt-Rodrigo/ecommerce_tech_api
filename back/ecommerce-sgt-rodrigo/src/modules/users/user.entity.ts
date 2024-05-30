@@ -18,7 +18,7 @@ uuidv4();
     @Column({ type: 'varchar', length: 50, unique: true, nullable: false })
     email: string;
   
-    @Column({ type: 'varchar', length: 20, nullable: false })
+    @Column({ type: 'varchar', length: 150, nullable: false })
     password: string;
   
     @Column('int')
