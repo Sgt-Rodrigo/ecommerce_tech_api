@@ -1,6 +1,4 @@
   import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
-  import { CreateAuthDto } from './dto/create-auth.dto';
-  import { UpdateAuthDto } from './dto/update-auth.dto';
   import { LoginAuthDto } from './dto/login-auth.dto';
   import { AuthRepositoryService } from './auth.repository';
   import { CreateUserDto } from '../users/dto/create-user.dto';
@@ -20,11 +18,11 @@ import { Role } from 'src/roles/roles.enum';
     async signIn(loginAuthDto:LoginAuthDto){
       try {
         const dbUser = await this.usersService.findUserByEmail(loginAuthDto.email);
-        if(!dbUser) throw new BadRequestException('Invalid email or password');
+        if(!dbUser) throw new BadRequestException('Invalid email');
 
         //w validates password/hash
         const isValidPassword = await bcrypt.compare(loginAuthDto.password, dbUser.password);
-        if(!isValidPassword) throw new BadRequestException('Invalid email or password');
+        if(!isValidPassword) throw new BadRequestException('Invalid password');
 
         //w token jwt to persist connection for 1h
         //w read the docs for more options mate
@@ -82,7 +80,7 @@ import { Role } from 'src/roles/roles.enum';
       return `This action returns a #${id} auth`;
     }
 
-    update(id: number, updateAuthDto: UpdateAuthDto) {
+    update(id: number, updateAuthDto: any) {
       return `This action updates a #${id} auth`;
     }
 

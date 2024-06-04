@@ -7,7 +7,9 @@ import { AuthGuard } from '../auth/auth.guard';
 import { CloudinaryService } from 'src/cloudinary.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ProductsDBService } from './productsDB.service';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Products')
 @Controller('products')
 @UseGuards(AuthGuard)
 export class ProductsController {
@@ -78,6 +80,7 @@ export class ProductsController {
     }
   }
 
+  @ApiBearerAuth()
   @Get()
     async findAll(
         @Query('page') page: number, // Extract the 'page' query parameter
@@ -95,6 +98,7 @@ export class ProductsController {
         }
     }
 
+  @ApiBearerAuth()
   @Get(':id')
   async findOne(@Param('id', ParseUUIDPipe) id: string, @Res() res: Response) {
     try {
@@ -108,6 +112,7 @@ export class ProductsController {
     }
   }
 
+  @ApiBearerAuth()
   @Put(':id')
   async updatePut(@Param('id', ParseUUIDPipe) id: string, 
                   @Body() updateProductDto: UpdateProductDto,
@@ -126,6 +131,7 @@ export class ProductsController {
   //   return this.productsService.update(+id, updateProductDto);
   // }
 
+  @ApiBearerAuth()
   @Delete(':id')
   async remove(@Param('id') id: string, @Res() res: Response) {
     try {
@@ -139,3 +145,4 @@ export class ProductsController {
     }
   }
 }
+  

@@ -85,6 +85,7 @@ async updatePut(id: string, updateProductDto: UpdateProductDto): Promise<Product
   }
 
   //w update the product properties based on the DTO
+  existingProduct.id = id;
   existingProduct.name = updateProductDto.name;
   existingProduct.description = updateProductDto.description;
   existingProduct.price = updateProductDto.price;

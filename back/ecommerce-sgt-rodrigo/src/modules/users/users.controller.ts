@@ -21,7 +21,9 @@ import { AuthGuard } from '../auth/auth.guard';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/roles/roles.enum';
 import { RolesGuard } from 'src/guards/roles/roles.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
 @Controller('users')
 @UseGuards(AuthGuard) 
 export class UsersController {
@@ -42,6 +44,7 @@ export class UsersController {
 //    }
 //   }
 
+  @ApiBearerAuth()
   @Get()
   @SetMetadata('isPublic', true)
  async findAll(@Req() req: Request, @Res() res: Response) {
@@ -58,6 +61,7 @@ export class UsersController {
     }
   }
 
+  @ApiBearerAuth()
   @Get('admin')
   @Roles(Role.ADMIN)
   @UseGuards(AuthGuard, RolesGuard)
@@ -65,6 +69,7 @@ export class UsersController {
       return 'Protected Route: for admins only'
   }
 
+  @ApiBearerAuth()
   @Get(':id')
   async findOne(@Param('id', ParseUUIDPipe) id: string, @Res() res: Response) {
    try {
@@ -75,6 +80,7 @@ export class UsersController {
    }
   }
 
+  @ApiBearerAuth()
   @Put(':id')
   async updatePut(@Param('id', ParseUUIDPipe) id: string, 
             @Body() updateUserDto: UpdateUserDto, 
@@ -96,6 +102,7 @@ export class UsersController {
   //   return this.usersService.update(+id, updateUserDto);
   // }
 
+  @ApiBearerAuth()
   @Delete(':id')
   async remove(@Param('id', ParseUUIDPipe) id: string, @Res() res: Response) {
    try {
