@@ -3,7 +3,7 @@ import { IsEmail, IsNotEmpty } from "class-validator";
 export class LoginAuthDto {
      /**
    * Email of the user, must be a valid email address and not empty
-   * @example 'marlene@example.com'
+   * @example 'newman@example.com'
    */
     @IsEmail()
     @IsNotEmpty()
@@ -11,7 +11,7 @@ export class LoginAuthDto {
 
     /**
    * Password of the user, must not be empty
-   * @example 'Password777!'
+   * @example 'PasswordNewman123!'
    */
     @IsNotEmpty()
     password: string

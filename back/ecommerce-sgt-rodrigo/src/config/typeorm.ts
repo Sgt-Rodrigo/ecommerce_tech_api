@@ -3,7 +3,8 @@
   import { registerAs } from "@nestjs/config";
   import { TypeOrmModuleOptions } from "@nestjs/typeorm";
 
-  dotenvConfig({path:'.env.development'});
+  // dotenvConfig({path:'.env.development'});
+  dotenvConfig()
 
   const config: TypeOrmModuleOptions = {
     type: 'postgres',
