@@ -35,6 +35,8 @@ export class Category {
    *  }
    * ]
    */
+  //w Category relates to => Product, each product will have a product.category_id(this last property name MUST be replicated in the Products entity)
+  //w products is an arrays of objects of type Product
   @OneToMany(() => Product, product => product.category_id)
   products: Product[];
 }

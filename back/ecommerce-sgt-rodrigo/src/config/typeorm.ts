@@ -3,8 +3,18 @@
   import { registerAs } from "@nestjs/config";
   import { TypeOrmModuleOptions } from "@nestjs/typeorm";
 
-  // dotenvConfig({path:'.env.development'});
-  dotenvConfig()
+
+  //w loads env vars from .env file to process.env (notice > when no parameters are passed to dotenv() it automatically searches for a '.env', otherwise you need to specify the path)
+  
+  //w loads env vars from .env.development file to process.env
+  //w the .env.production file for docker takes precedence when running docker, hence, there is no need to comment this out. Also remember that both the app and the database need to have this file specified in the docker compose via the env_file property.
+  dotenvConfig({path:'.env.development'});
+
+  //? loads environment-specific .env file (only if I had an .env.production.local which I don't, you should also modify the package.json scripts to add a NODE_ENV variable set to the corresponding environments)
+// const env = process.env.NODE_ENV || 'development';
+// dotenvConfig({ path: `.env.${env}` });
+  
+
 
   const config: TypeOrmModuleOptions = {
     type: 'postgres',
@@ -14,11 +24,13 @@
     username: process.env.DB_USERNAME || 'postgres',
     password: process.env.DB_PASSWORD || 'password',
     autoLoadEntities: true,
+    //w false for production
     synchronize: true,
     logging: true,
     entities: ['dist/**/*.entity{.ts,.js}'],
     migrations: ['dist/migrations/*{.js,.ts}'],
   };
 
+  //w namespacing
   export default registerAs('typeorm', ()=> config)
   export const connectionSource = new DataSource(config as DataSourceOptions)

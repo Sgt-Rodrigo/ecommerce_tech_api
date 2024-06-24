@@ -1,12 +1,10 @@
-version: '3.8'
-
 services:
   nestapp:
     build: ./
     ports:
       - "3001:3000"
     env_file:
-      - .env
+      - .env.production
     depends_on:
       - postgresdb
 
@@ -15,7 +13,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     env_file:
-      - .env
+      - .env.production
 
 volumes:
   pgdata:
