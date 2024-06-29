@@ -24,8 +24,8 @@
     username: process.env.DB_USERNAME || 'postgres',
     password: process.env.DB_PASSWORD || 'password',
     autoLoadEntities: true,
-    //w false for production
-    synchronize: true,
+    //w false for production and migrations
+    synchronize: false,
     logging: true,
     entities: ['dist/**/*.entity{.ts,.js}'],
     migrations: ['dist/migrations/*{.js,.ts}'],

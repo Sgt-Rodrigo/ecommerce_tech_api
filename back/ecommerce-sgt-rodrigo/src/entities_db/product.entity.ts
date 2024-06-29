@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { v4 as uuidv4 } from 'uuid';
 import { Category } from "./category.entity";
 import { OrderDetail } from "./order_detail.entity";
@@ -58,6 +58,7 @@ export class Product {
    * }
    */
   @ManyToOne(() => Category, category => category.products)
+  @JoinColumn({name: 'category_id'})
   category_id: Category;
 
   /**
@@ -75,6 +76,8 @@ export class Product {
    * ]
    */
   @ManyToMany(() => OrderDetail, orderDetail => orderDetail.products)
+  //w JoinTable goes in the owner of the relationship
+  //w if not set explicitly, typeorm handles the creation of the junction table automatically. Just use it if you need to change the name or what ave u
   @JoinTable()
   orderDetails: OrderDetail[];
 }

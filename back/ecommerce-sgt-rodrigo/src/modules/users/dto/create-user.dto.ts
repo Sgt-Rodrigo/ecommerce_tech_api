@@ -46,6 +46,7 @@ export class CreateUserDto {
    * Phone number must be a valid numeric string
    * @example 1234567890
    */
+  //w it should be saved as a string to preserce posible leading ceros and special formats, symbols, etc, you can parse it in the service otherwise.
   @IsNotEmpty({ message: 'Phone number is required' })
   @IsNumberString()
   phone: string;

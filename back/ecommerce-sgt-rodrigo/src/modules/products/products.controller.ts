@@ -133,7 +133,7 @@ export class ProductsController {
 
   @ApiBearerAuth()
   @Delete(':id')
-  async remove(@Param('id') id: string, @Res() res: Response) {
+  async remove(@Param('id', ParseUUIDPipe) id: string, @Res() res: Response) {
     try {
       const response = await this.productsService.remove(id);
       return res.status(200).json({

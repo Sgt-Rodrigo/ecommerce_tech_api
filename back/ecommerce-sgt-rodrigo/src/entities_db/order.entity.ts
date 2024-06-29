@@ -32,6 +32,7 @@ uuidv4();
    *  "email": "john.doe@example.com"
    * }
    */
+  //w many order for one user
     @ManyToOne(() => User)
     @JoinColumn({ name: 'user_id' })
     user: User; 
@@ -47,7 +48,7 @@ uuidv4();
    * Order detail associated with the order, excluded from serialization
    */
     @Exclude()
-    @OneToOne(() => OrderDetail)
+    @OneToOne(() => OrderDetail, orderDetail=> orderDetail.order)
     @JoinColumn()
     orderDetail: OrderDetail;
 

@@ -22,32 +22,42 @@
             private readonly orderDetailRepository: Repository<OrderDetail>,
           ) {}
         
-
+          //w uses relation navigation to get the orderDetail.products array >
+          //w orderDetail and user (direct relation); orderDetail.products (nested relation = Products entity has no relation with Order entity, however, you can get it)
           async getOrderByID(orderId: string) {
-            // Find the order with the given ID
+            //w finds the order by ID
             const order = await this.orderRepository.findOne({
               where: { id: orderId },
-              relations: ['orderDetail', 'orderDetail.products', 'user', 'user.orders'],
+              relations: ['orderDetail', 'user', 'orderDetail.products'],
             });
+         
           
-            // If order is not found, throw a NotFoundException
+            //w If order is not found, throw a exception
             if (!order) {
               throw new NotFoundException('Order not found');
             }
-          
-          // Extract the user and the orders array containing only id and date
-          const user = order.user;
-          const orders = user.orders.map(order => ({ id: order.id, date: order.date }));
 
-          // Return the user with the orders array
-          return { user, orders };
+            //w destructures order
+            const {user, ...customerOrder} = order;
+          
+            //w customizes returned object to exclude credentials
+          return {
+            customerOrder,
+            user: {
+              name:user.name,
+              id:user.id,
+              email: user.email,
+              address: user.address,
+              city: user.city,
+              phone: user.phone
+            }
+          }
           }
 
 
-        async addOrder(orderData: CreateOrderDto) {
-
-           
+        async addOrder(orderData: CreateOrderDto) {           
            try {
+            //w destructures user id and products array
              const { user_id, products } = orderData;
          
              //W  fetches user
@@ -56,11 +66,12 @@
                throw new NotFoundException('User not found');
              }
          
-             //w creates order
+             //w creates order (with the class, could also do it with .create())
              const order = new Order();
              order.user = user;
              order.date = new Date();
              order.total = 0;
+             const newOrder = await this.orderRepository.save(order);
          
              //w fetches products and creates detail
              const orderDetail = new OrderDetail();
@@ -68,7 +79,10 @@
              orderDetail.products = [];
              
              for (const { id } of products) {
+              //* fetches each product by id and stock > 0 
                const product = await this.productRepository.findOne({ where: { id, stock: MoreThan(0) } });
+
+             
                if (!product) {
                  throw new NotFoundException(`Product with id ${id} not found or out of stock`);
                }
@@ -76,30 +90,43 @@
                product.stock -= 1;
                await this.productRepository.save(product);
          
-               // Add product price to order total and order detail price
-      const productPrice = parseFloat(product.price.toString());
-      order.total += productPrice;
-      orderDetail.products.push(product);
-      orderDetail.price += productPrice;
+               //w adds product price to order.total and orderdetail.price
+               //? ts enforces the parseFloat argument to be a string, even if in vanilla Js you can pass both string or number
+               //? You can also do this > parseFloat(String(product.price));
+               //? Less recommended > product.price as unknown as number (if you are sure price is always a number but type assertion is a workaround, kind of cheat)
+              const productPrice = parseFloat(product.price.toString());
+              orderDetail.price += productPrice;
+              orderDetail.products.push(product);
              }
-         
-             await this.orderRepository.save(order);
+
+             //w after end of for loop
+             order.total = orderDetail.price;
+        
+             //w adds order to orderDetail relation and saves
+            //w this order already has id from postgres
              orderDetail.order = order;
              await this.orderDetailRepository.save(orderDetail);
-         
+             
+             //w adds orderDetail relation to order and save
              order.orderDetail = orderDetail;
+             await this.orderRepository.save(order);
+
+             return {
+              message: 'order created succesfully',
+              order_id: newOrder.id,
+              price: newOrder.total
+             }
 
              // Transform the order object to a plain object before returning
-    const plainOrder = plainToClass(Order, order, { excludeExtraneousValues: true });
+    // const plainOrder = plainToClass(Order, order, { excludeExtraneousValues: true });
 
-    return plainOrder;
-
+    // return plainOrder;
            } catch (error) {
-            // throw new HttpException('Error adding order', HttpStatus.INTERNAL_SERVER_ERROR)
-            throw error
+            if(error instanceof NotFoundException) {
+              throw error
+            } else {
+              throw new HttpException('Error adding order', HttpStatus.INTERNAL_SERVER_ERROR)
+            }
            }
-          }
-        
-
-
+          } 
     }

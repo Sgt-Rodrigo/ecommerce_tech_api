@@ -76,6 +76,7 @@ uuidv4();
     /**
    * Orders associated with the user
    */
+    //w bear in mind that JoinColumn is not set here so you won't see an orders column
     @OneToMany(() => Order, order => order.user)
     orders: Order[];
   }

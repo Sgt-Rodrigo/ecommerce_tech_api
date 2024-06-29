@@ -2,8 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { logger } from './common/logger';
 import { ValidationPipe } from '@nestjs/common';
-import { auth } from 'express-openid-connect';
-import {config as auth0Config} from './config/auth0.config';
+// import { auth } from 'express-openid-connect';
+// import {config as auth0Config} from './config/auth0.config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {

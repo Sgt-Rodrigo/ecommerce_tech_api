@@ -9,6 +9,7 @@ import { ApiTags } from '@nestjs/swagger';
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
+  //w Sets don't allow duplicate values
   @Post('seeder')
   async seedCategories() {
     const categories = Array.from(new Set(preloadData.map(item => item.category))).map(name => ({ name }));
