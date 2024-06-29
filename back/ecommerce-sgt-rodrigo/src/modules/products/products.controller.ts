@@ -63,18 +63,24 @@ export class ProductsController {
       })
   ) file: Express.Multer.File, @Param('id') productId: string) {
     try {
-      // Upload the image to Cloudinary
-      const uploadResult = await this.cloudinaryService.uploadImage(file);
 
-      // Extract the secure URL from the upload result
-      const imageUrl = uploadResult.secure_url;
+      let imageUrl:string;
 
-      // Update the product image URL
+      if(!file){
+        imageUrl = 'https://res.cloudinary.com/da73rab2q/image/upload/v1716943567/mj1uafvrolxvn6dlenij.jpg'
+      } else {
+        //w uploads the image to Cloudinary
+        const uploadResult = await this.cloudinaryService.uploadImage(file);
+        //w extracts the secure URL from the upload result
+        imageUrl = uploadResult.secure_url
+      }
+
+      //w updates the product image URL
       await this.productsDBService.updateImageUrl(productId, imageUrl);
 
       return { message: 'Image uploaded and product image URL updated successfully' };
     } catch (error) {
-      // Handle any errors (e.g., failed upload or database update)
+      //w handles any errors (e.g., failed upload or database update)
       console.error('Error uploading image:', error);
       throw new InternalServerErrorException('Error uploading image');
     }

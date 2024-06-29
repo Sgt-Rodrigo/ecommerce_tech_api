@@ -28,5 +28,6 @@ export class CreateProductDto {
    * URL of the product image, must be a string
    * @example http://example.com/product-image.jpg
    */
-        imageURL: string;
+        //w sets default image url if none if passed in body
+        imageURL: string='https://res.cloudinary.com/da73rab2q/image/upload/v1716943567/mj1uafvrolxvn6dlenij.jpg';
 }

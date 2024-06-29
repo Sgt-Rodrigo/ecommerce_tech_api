@@ -47,8 +47,9 @@ export class Product {
    * Image URL of the product, defaults to 'default image'
    * @example http://example.com/smartphone.jpg
    */
-  @Column('text')
-  imgUrl: string = 'default image';
+  //! this default set up is not working, I handled it in the service itself
+  @Column('text', {default:'https://res.cloudinary.com/da73rab2q/image/upload/v1716943567/mj1uafvrolxvn6dlenij.jpg'})
+  imgUrl: string;
 
    /**
    * Category associated with the product
