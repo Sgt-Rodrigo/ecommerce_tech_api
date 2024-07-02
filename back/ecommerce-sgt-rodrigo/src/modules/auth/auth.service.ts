@@ -4,7 +4,7 @@
   import { CreateUserDto } from '../users/dto/create-user.dto';
   import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { Role } from 'src/roles/roles.enum';
+import { Role } from '../../roles/roles.enum';
   const bcrypt = require('bcrypt');
 
   @Injectable()
@@ -25,7 +25,13 @@ import { Role } from 'src/roles/roles.enum';
         if(!isValidPassword) throw new BadRequestException('Invalid password');
 
         //w token jwt to persist connection for 1h
-        //w read the docs for more options mate
+        //w three steps header, payload, signature > here we use the default header but can be manually set > 
+        //? Manually specify the JWT header
+      // const header = {
+      //   alg: 'HS256',
+      //   typ: 'JWT'
+      // };
+        //w read the docs for more options
         //! bear in mind all users are not admins by default, you must change it directly from the database
         const userPayload = {
           sub:dbUser.id,
@@ -37,6 +43,11 @@ import { Role } from 'src/roles/roles.enum';
         
         //w this creates de token 
         const token = this.jwtService.sign(userPayload)
+
+       //? creates the token with manually set header
+      // const token = this.jwtService.sign(userPayload, {
+      //   header: header
+      // });
 
         return {success: 'User Logged In Succesfully', token}
       } catch (error) {
@@ -62,7 +73,7 @@ import { Role } from 'src/roles/roles.enum';
              ...userDto,
              password: hashedPassword
            }
-           console.log(newUser);
+          //  console.log(newUser);
  
            const response = await this.usersService.saveUser(newUser);
  

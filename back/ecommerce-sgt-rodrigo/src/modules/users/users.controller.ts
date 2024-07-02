@@ -18,9 +18,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Request, Response } from 'express';
 import { AuthGuard } from '../auth/auth.guard';
-import { Roles } from 'src/decorators/roles.decorator';
-import { Role } from 'src/roles/roles.enum';
-import { RolesGuard } from 'src/guards/roles/roles.guard';
+import { Roles } from '../../decorators/roles.decorator';
+import { Role } from '../../roles/roles.enum';
+import { RolesGuard } from '../../guards/roles/roles.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Users')
@@ -43,10 +43,12 @@ export class UsersController {
 //     throw error
 //    }
 //   }
-
+  //w Decorators order > Swagger > Route > Metadata > Guards
   @ApiBearerAuth()
   @Get()
-  @SetMetadata('isPublic', true)
+  // @SetMetadata('isPublic', true)
+  @Roles(Role.ADMIN)
+  @UseGuards(RolesGuard)
  async findAll(@Req() req: Request, @Res() res: Response) {
     try {
       const response = await this.usersService.findAll();

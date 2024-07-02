@@ -35,8 +35,6 @@ export class AuthController {
     } catch (error) {
       throw error
     }
-
-
   }
   
   // @Post()

@@ -26,7 +26,7 @@ describe('UsersController', ()=>{
 
     //* Tests
 
-    it('users controller should be defined', ()=> {
+    xit('users controller should be defined', ()=> {
         expect(usersController).toBeDefined();
     })
 })

@@ -32,6 +32,8 @@ export class AuthGuard implements CanActivate {
     //w if you modify this
     try {
       const secret = process.env.JWT_SECRET;
+      //w verifies token and decodes payload
+      //! otherwise it throws an error directly (no need to handle it)
       const payload = await this.jwtService.verifyAsync(token, {secret});
       payload.iat = new Date(payload.iat * 1000);
       payload.exp = new Date(payload.exp * 1000);

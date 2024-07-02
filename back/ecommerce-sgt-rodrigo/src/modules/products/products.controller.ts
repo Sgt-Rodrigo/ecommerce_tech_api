@@ -8,6 +8,9 @@ import { CloudinaryService } from 'src/cloudinary.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ProductsDBService } from './productsDB.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { RolesGuard } from 'src/guards/roles/roles.guard';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/roles/roles.enum';
 
 @ApiTags('Products')
 @Controller('products')
@@ -120,6 +123,8 @@ export class ProductsController {
 
   @ApiBearerAuth()
   @Put(':id')
+  @Roles(Role.ADMIN)
+  @UseGuards(RolesGuard)
   async updatePut(@Param('id', ParseUUIDPipe) id: string, 
                   @Body() updateProductDto: UpdateProductDto,
                   @Res() res:Response
