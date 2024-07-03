@@ -5,6 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 // import { auth } from 'express-openid-connect';
 // import {config as auth0Config} from './config/auth0.config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { AuthGuard } from './modules/auth/auth.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,7 +14,7 @@ async function bootstrap() {
   //* logger middleware
   app.use(logger);
   app.useGlobalPipes(new ValidationPipe({
-    disableErrorMessages: true, //w disables response error messages
+    disableErrorMessages: false, //w disables response error messages
   }));
 
   //* swagger 

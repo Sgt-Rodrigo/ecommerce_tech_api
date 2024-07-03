@@ -25,16 +25,28 @@ export class UsersService {
    
   }
 
-  async saveUser(userData:any) {
+  async saveUser(userData:Omit<CreateUserDto,'passwordConfirmation'>) {
     try { 
       //w creates an instance of User from the CreateUserDto
       const newUser = this.usersRepository.create(userData);
       const response = await this.usersRepository.save(newUser);
-      const {password, ...userWithNoPassword} = response[0];
+      console.log(response);
+
+      //w checks if response is an array and extract the first user object
+    const savedUser = Array.isArray(response) ? response[0] : response;
+
+    if (!savedUser) {
+      throw new HttpException('User could not be saved', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+      
+      const {password, ...userWithNoPassword} = savedUser;
+
       return {success: 'user registered',
               user:userWithNoPassword
               }
     } catch (error) { 
+      console.error('Error in UserService saveUser:', error);
+
       throw new HttpException('Error signing up user', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }

@@ -6,7 +6,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { ApiProperty } from "@nestjs/swagger";
 uuidv4();
 
-@Entity()
+@Entity({
+  name: 'order_details'
+})
 export class OrderDetail {
   /**
    * Unique identifier for the order detail, generated as a UUID

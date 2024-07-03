@@ -11,7 +11,7 @@ export class CreateUserDto {
    * Email must be a valid email address
    * @example newman@example.com
    */
-  @IsEmail()
+  @IsEmail({},{message:'Please, provide a valid email >> example@example.com'})
   email: string;
 
 
@@ -56,7 +56,7 @@ export class CreateUserDto {
    * @example 'United States'
    */          
   @IsString()
-  @Length(5, 20)
+  @Length(5, 50)
   country: string;
 
    /**

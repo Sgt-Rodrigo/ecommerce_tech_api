@@ -13,9 +13,14 @@ export class AuthGuard implements CanActivate {
   async canActivate(
     context: ExecutionContext,
   ):  Promise<boolean> {
+    //* log
+    console.log('AuthGuard: Entering canActivate');
 
     //w skips methods where authorization is not mandatory
     const isPublic = this.reflector.get<boolean>('isPublic', context.getHandler());
+    //*log
+    console.log('AuthGuard: isPublic', isPublic);
+
     if (isPublic) {
       //* Skip authentication by returning early
       return true;
@@ -25,6 +30,9 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
 
     const token = request.headers['authorization']?.split(' ')[1] ?? '';
+    //*log
+    console.log('AuthGuard: Token present:', !!token);
+
     if(!token) {
       throw new UnauthorizedException('Bearer Token Not Found')
     }
@@ -32,9 +40,12 @@ export class AuthGuard implements CanActivate {
     //w if you modify this
     try {
       const secret = process.env.JWT_SECRET;
+      console.log('AuthGuard: JWT_SECRET present:', !!secret);
+
       //w verifies token and decodes payload
       //! otherwise it throws an error directly (no need to handle it)
       const payload = await this.jwtService.verifyAsync(token, {secret});
+      console.log('AuthGuard: Token verified, payload:', payload);
       payload.iat = new Date(payload.iat * 1000);
       payload.exp = new Date(payload.exp * 1000);
       //? already defined in service
@@ -42,6 +53,7 @@ export class AuthGuard implements CanActivate {
       request.user = payload;
       return true
     } catch (error) {
+      console.error('AuthGuard: Token verification failed', error);
       throw new UnauthorizedException('Invalid Token')
     }
   }

@@ -46,7 +46,6 @@ export class UsersController {
   //w Decorators order > Swagger > Route > Metadata > Guards
   @ApiBearerAuth()
   @Get()
-  // @SetMetadata('isPublic', true)
   @Roles(Role.ADMIN)
   @UseGuards(RolesGuard)
  async findAll(@Req() req: Request, @Res() res: Response) {

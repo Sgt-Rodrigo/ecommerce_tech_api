@@ -30,7 +30,11 @@ export class AuthController {
   @UsePipes(PasswordMatchPipe)
   async signUpUser(@Body() userData: CreateUserDto){
     try {
-      const response = await this.authService.signUpUser(userData);
+      const normalizedUserData = {
+        ...userData,
+        email: userData.email.toLowerCase()
+      }
+      const response = await this.authService.signUpUser(normalizedUserData);
       return response
     } catch (error) {
       throw error

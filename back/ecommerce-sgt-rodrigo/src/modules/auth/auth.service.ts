@@ -65,7 +65,8 @@ import { Role } from '../../roles/roles.enum';
  
         //w extracts fields from DTO excluding passwordConfirmation
        const { passwordConfirmation, ...userDto } = userData;
- 
+
+        //? interesting fact: even if two users happen to have the same password, bycrypt creates a different hash every time (prevents rainbow table attacks)
          const hashedPassword = await bcrypt.hash(userData.password, 10);
          if(!hashedPassword) throw new HttpException('Error hashing password', HttpStatus.SERVICE_UNAVAILABLE)
            
@@ -79,6 +80,7 @@ import { Role } from '../../roles/roles.enum';
  
          return response
      } catch (error) {
+      console.error('Error in AuthService signUpUser:', error);
        throw error
      }   
     }

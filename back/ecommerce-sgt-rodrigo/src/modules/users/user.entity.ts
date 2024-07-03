@@ -41,8 +41,8 @@ uuidv4();
    * Phone number of the user, stored as an integer
    * @example 1234567890
    */
-    @Column('int')
-    phone: number;
+    @Column()
+    phone: string;
   
      /**
    * Country of the user, must be a string up to 50 characters
