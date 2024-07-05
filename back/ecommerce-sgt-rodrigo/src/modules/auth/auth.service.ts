@@ -18,11 +18,11 @@ import { Role } from '../../roles/roles.enum';
     async signIn(loginAuthDto:LoginAuthDto){
       try {
         const dbUser = await this.usersService.findUserByEmail(loginAuthDto.email);
-        if(!dbUser) throw new BadRequestException('Invalid email');
+        if(!dbUser) throw new BadRequestException('Invalid email or password');
 
         //w validates password/hash
         const isValidPassword = await bcrypt.compare(loginAuthDto.password, dbUser.password);
-        if(!isValidPassword) throw new BadRequestException('Invalid password');
+        if(!isValidPassword) throw new BadRequestException('Invalid email or password');
 
         //w token jwt to persist connection for 1h
         //w three steps header, payload, signature > here we use the default header but can be manually set > 

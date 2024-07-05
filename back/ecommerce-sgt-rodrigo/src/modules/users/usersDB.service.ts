@@ -5,6 +5,7 @@ import { User } from './entities/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+const bcrypt = require('bcrypt');
 
 @Injectable()
 export class UsersRepo{
@@ -15,20 +16,25 @@ export class UsersRepo{
     private readonly jsonServerUrl = 'http://localhost:8000/users';
     
 
-    async getAllUsers(page: number = 1, limit: number = 5): Promise<User[]> {
+    async getAllUsers(page: number = 1, limit: number = 5):Promise<Partial<User>[]> {
        try {
          const skip = (page - 1) * limit;
-     
-         return this.usersRepository.find({
+
+         //? check the docs > select: {password:false}
+         //? find (modern) vs findAll(Typeorm 0.2 and earlier)
+          return await this.usersRepository.find({
+            select: ['id', 'name', 'email', 'phone', 'country', 'address', 'city', 'isAdmin'],
            skip,
            take: limit,
          });
+         
+       
        } catch (error) {
         throw new HttpException('Error fectching all users', HttpStatus.INTERNAL_SERVER_ERROR)
        }
       }
 
-    //w getAllUsers with pagination
+    //w getAllUsers with pagination (json-server)
     // async getAllUsers(page:number = 1, limit:number = 5){
     //     try {
     //         const response = await axios.get(
@@ -78,7 +84,7 @@ export class UsersRepo{
       try {
         const newUser = this.usersRepository.create([{
             ...userData,
-            role: 'customer',
+            isAdmin: false,
         }]);
 
         return await this.usersRepository.save(newUser[0]);
@@ -93,26 +99,32 @@ export class UsersRepo{
         const user = await this.usersRepository.findOne({where:{id}});
         if(!user) throw new NotFoundException('User not found');
 
+        const hashedPassword = await bcrypt.hash(updatedUserData.password, 10);
+        if(!hashedPassword) throw new HttpException('Error hashing password', HttpStatus.SERVICE_UNAVAILABLE)
+
         user.name = updatedUserData.name;
         user.email = updatedUserData.email;
-        user.password = updatedUserData.password;
+        user.password = hashedPassword;
         user.address = updatedUserData.address;
         user.phone = updatedUserData.phone;
         user.country = updatedUserData.country;
         user.city = updatedUserData.city;
-        user.role = updatedUserData.role;
+        user.isAdmin = updatedUserData.isAdmin;
 
        
 
         const updatedUser =  await this.usersRepository.save(user);
         console.log(updatedUser);
-        return updatedUser
+        //w returns the updated user without showing the hashed pass
+        const {password, ...updated } = updatedUser;
+        return updated
        
       } catch (error) {
         throw new HttpException('Error modifying user', HttpStatus.INTERNAL_SERVER_ERROR)
       }
 
 
+      //? json-server test (can be deleted)
     //  try {
     //     const response = await axios.put(`${this.jsonServerUrl}/${id}`, updatedUserData);
     //     return response.data

@@ -77,7 +77,7 @@ async findOne(id: string) {
 }
 
 
-async updatePut(id: string, updateProductDto: UpdateProductDto): Promise<Product> {
+async updatePut(id: string, updateProductDto: UpdateProductDto) {
   const existingProduct = await this.productsRepository.findOne({where:{id}});
 
   if (!existingProduct) {
@@ -98,8 +98,8 @@ async updatePut(id: string, updateProductDto: UpdateProductDto): Promise<Product
   }
   existingProduct.category_id = category;
 
-  //w save the updated product
-  return await this.productsRepository.save(existingProduct);
+  //w save the updated product, returns the saved product back
+ return await this.productsRepository.save(existingProduct);
 }
 
 

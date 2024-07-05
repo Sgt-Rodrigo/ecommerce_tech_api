@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Res, UseGuards, SetMetadata, ParseUUIDPipe, Query, UseInterceptors, UploadedFile, InternalServerErrorException, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Res, UseGuards, SetMetadata, ParseUUIDPipe, Query, UseInterceptors, UploadedFile, InternalServerErrorException, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator} from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -13,8 +13,8 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/roles/roles.enum';
 
 @ApiTags('Products')
-@Controller('products')
 @UseGuards(AuthGuard)
+@Controller('products')
 export class ProductsController {
   constructor(
     private readonly productsService: ProductsService,
@@ -23,11 +23,11 @@ export class ProductsController {
   ) {}
 
   @Post()
-  @SetMetadata('isPublic', true)
   async create(@Body() createProductDto: CreateProductDto, @Res() res:Response) {
    try {
     const response = await this.productsService.create(createProductDto);
     return res.status(201).json(response.id)
+    
     // return res.status(201).json({
     //   message: 'Product registered successfully',
     //   product: response
@@ -48,9 +48,10 @@ export class ProductsController {
    }
   }
 
-  //w here I m using the repo directly (delete all intermediate useless services)
   //w image uploader
   @Post('files/uploadImage/:id')
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN)
   @UseInterceptors(FileInterceptor('image'))
   async uploadImage(@UploadedFile(
       new ParseFilePipe({
@@ -90,6 +91,7 @@ export class ProductsController {
   }
 
   @ApiBearerAuth()
+  @SetMetadata('isPublic', true)
   @Get()
     async findAll(
         @Query('page') page: number, // Extract the 'page' query parameter
@@ -108,6 +110,7 @@ export class ProductsController {
     }
 
   @ApiBearerAuth()
+  @SetMetadata('isPublic', true)
   @Get(':id')
   async findOne(@Param('id', ParseUUIDPipe) id: string, @Res() res: Response) {
     try {
@@ -131,7 +134,10 @@ export class ProductsController {
                 ) {
   try {
       const response = await this.productsService.updatePut(id, updateProductDto);
-      return res.status(200).json(response.id)
+      return res.status(200).json({
+        message: `${response.name} updated`,
+        id:response.id        
+      })
   } catch (error) {
     throw error
   }

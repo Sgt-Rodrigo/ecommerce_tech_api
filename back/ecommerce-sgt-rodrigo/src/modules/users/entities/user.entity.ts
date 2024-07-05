@@ -7,5 +7,5 @@ export class User {
     'phone': string;
     'country': string;
     'city': string;
-    'role': 'customer' | 'admin'
+    'isAdmin': boolean
 }

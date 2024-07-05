@@ -13,8 +13,9 @@ async function bootstrap() {
   // app.use(auth(auth0Config));
   //* logger middleware
   app.use(logger);
+  //* validation pipe global
   app.useGlobalPipes(new ValidationPipe({
-    disableErrorMessages: false, //w disables response error messages
+    disableErrorMessages: false, //w enables response error messages from pipes
   }));
 
   //* swagger 

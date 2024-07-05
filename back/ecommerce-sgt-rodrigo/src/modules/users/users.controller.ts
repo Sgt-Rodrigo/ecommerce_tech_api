@@ -12,6 +12,7 @@ import {
   SetMetadata,
   ParseUUIDPipe,
   Req,
+  UsePipes,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -22,6 +23,7 @@ import { Roles } from '../../decorators/roles.decorator';
 import { Role } from '../../roles/roles.enum';
 import { RolesGuard } from '../../guards/roles/roles.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { PasswordMatchPipe } from 'src/common/pipes/password_match.pipe';
 
 @ApiTags('Users')
 @Controller('users')
@@ -29,20 +31,6 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  //w this endpoint is replaced by the auth one > auth/signup
-//   @Post()
-//   @SetMetadata('isPublic', true)
-//  async create(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
-//    try {
-//     const response = await this.usersService.create(createUserDto)
-
-//       return res.status(201).json({
-//         message: `user created with id: ${response.id}`
-//       })     
-//    } catch (error) {
-//     throw error
-//    }
-//   }
   //w Decorators order > Swagger > Route > Metadata > Guards
   @ApiBearerAuth()
   @Get()
@@ -82,6 +70,7 @@ export class UsersController {
   }
 
   @ApiBearerAuth()
+  @UsePipes(PasswordMatchPipe)
   @Put(':id')
   async updatePut(@Param('id', ParseUUIDPipe) id: string, 
             @Body() updateUserDto: UpdateUserDto, 
