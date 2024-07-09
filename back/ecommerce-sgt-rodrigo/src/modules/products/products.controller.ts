@@ -22,6 +22,7 @@ export class ProductsController {
     private readonly cloudinaryService: CloudinaryService
   ) {}
 
+  @ApiBearerAuth()
   @Post()
   async create(@Body() createProductDto: CreateProductDto, @Res() res:Response) {
    try {
