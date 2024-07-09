@@ -6,20 +6,20 @@ import { IsNumber, IsString, IsUrl, IsUUID, MaxLength } from 'class-validator';
 export class UpdateProductDto {
   /**
    * Unique identifier for the order, generated as a UUID
-   * @example f4219523-2d0c-4534-b3c1-257d62fe674d
+   * @example 5f92b783-aa31-446a-a47c-c3dbf85a6efc
    */
   @IsUUID()
   id: string;
   /**
    * Name of the product, must be a string
-   * @example 'Printer HP'
+   * @example 'Motorola Edge 50'
    */
   @IsString()
   @MaxLength(50)
   name: string;
   /**
    * Description of the product, must be a string
-   * @example 'This is a high-quality printer used for various purposes.'
+   * @example 'This is a high-quality Motorola used for various purposes.'
    */
   @IsString()
   @MaxLength(500)
@@ -38,7 +38,7 @@ export class UpdateProductDto {
   stock: number;
   /**
    * Category ID to which the product belongs, must be a string
-   * @example d06bfa7a-9bc9-462f-b7e5-046a14e54f04
+   * @example a85f8c2d-b605-4a3b-87f4-9ef6a6f3ac4d
    */
 
   @IsUUID()
