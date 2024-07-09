@@ -6,11 +6,18 @@ import {
   IsNotEmpty,
   IsNumberString,
   IsString,
+  IsUUID,
   Length,
   Matches,
 } from 'class-validator';
 
 export class UpdateUserDto {
+/**
+   * User id with uuid format
+   * @example 'f9cd44f5-1f47-4687-bae3-56528dd5d261'
+   */
+  @IsUUID()
+  id:string;
   /**
    * Name of the user, must be a string up to 50 characters
    * @example 'George Constanza'
