@@ -86,6 +86,23 @@ export class UsersController {
     }
   }
 
+
+  @ApiBearerAuth()
+  @UsePipes(PasswordMatchPipe)
+  @Put('/admin/:id')
+  async updateAdmin(@Param('id', ParseUUIDPipe) id:string, 
+                    @Body() updateUserDto: UpdateUserDto )                  
+{
+try {
+  console.log(updateUserDto);
+  const response = await this.usersService.updateAdmin(id, updateUserDto);
+  return response
+} catch (error) {
+  throw error
+}
+}
+
+
   //w review how this works
   // @Patch(':id')
   // updatePatch(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {

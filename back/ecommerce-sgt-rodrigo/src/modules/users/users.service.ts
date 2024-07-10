@@ -86,6 +86,22 @@ export class UsersService {
     }
   }
 
+  async updateAdmin(id:string, userData:UpdateUserDto) {
+    try {
+      const user= await this.usersRepository.findOne({where:{id}});
+      if(!user) {
+        throw new HttpException('User does not exist', HttpStatus.BAD_REQUEST)
+      }
+      const response =  await this.usersRepository.save(userData);
+  
+      const {password, ...userUpdated} = response;
+  
+      return userUpdated
+    } catch (error) {
+      throw new HttpException('User could not be updated', HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+  }
+
   async remove(id: string) {
     try {
       const response = await this.usersRepo.remove(id);

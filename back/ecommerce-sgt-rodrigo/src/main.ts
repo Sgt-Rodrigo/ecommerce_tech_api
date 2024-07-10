@@ -8,12 +8,13 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AuthGuard } from './modules/auth/auth.guard';
 
 async function bootstrap() {
+  //w returns a Promise >  INestApplication instance (if resolved)
   const app = await NestFactory.create(AppModule);
   //* AUTH0 is not required in this proyect
   // app.use(auth(auth0Config));
   //* logger middleware
   app.use(logger);
-  //* validation pipe global
+  //* validation pipe global(no DI)
   app.useGlobalPipes(new ValidationPipe({
     disableErrorMessages: false, //w enables response error messages from pipes
   }));
